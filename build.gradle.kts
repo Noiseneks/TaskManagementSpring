@@ -18,7 +18,7 @@ dependencies {
 
     // openapi
     implementation(group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version = "2.6.0")
-    implementation(group = "org.projectlombok", name = "lombok", version = "1.18.30")
+    implementation(group = "org.projectlombok", name = "lombok", version = "1.18.34")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter")
