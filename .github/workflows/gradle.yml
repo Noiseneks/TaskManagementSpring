@@ -7,7 +7,8 @@ on:
 
 permissions:
   contents: read
-
+  checks: write
+  
 jobs:
   build:
 
@@ -30,7 +31,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew
+        run: ./gradlew build
 
       - name: Publish Test Reports
         uses: dorny/test-reporter@v1
