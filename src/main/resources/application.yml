@@ -1,0 +1,7 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+  max-http-request-header-size: 5MB
