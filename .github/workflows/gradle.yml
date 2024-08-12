@@ -42,7 +42,11 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-
+        env: 
+          MYSQL_DATABASE: testdb
+          DB_USERNAME: root
+          DB_PASSWORD: testrootpass
+          
       - name: Publish Test Reports
         uses: dorny/test-reporter@v1
         if: always()
