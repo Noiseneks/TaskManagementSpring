@@ -92,24 +92,27 @@ public class TasksTests {
     @Test
     @Order(2)
     public void addTaskTest() throws Exception {
-        TaskDto taskDto = new TaskDto();
+
+        MockHttpServletResponse response = null;
 
         for (int i = 0; i < 3; ++i) {
             String taskName = "Сделай " + getRandomString(10, 16);
             String description = "Ну там вот это вот " + getRandomString(16, 32);
+
+            TaskDto taskDto = new TaskDto();
             taskDto.setName(taskName);
             taskDto.setDescription(description);
             taskDto.setPriority("HIGH");
+
+            RequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .post("/tasks/createTask")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                    .content(objectMapper.writeValueAsString(taskDto))
+                    .contentType(MediaType.APPLICATION_JSON);
+
+            MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
+            response = mvcResult.getResponse();
         }
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/tasks/createTask")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                .content(objectMapper.writeValueAsString(taskDto))
-                .contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult mvcResult = mvc.perform(requestBuilder).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
