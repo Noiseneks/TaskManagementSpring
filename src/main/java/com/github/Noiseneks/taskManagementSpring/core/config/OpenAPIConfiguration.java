@@ -1,4 +1,4 @@
-package com.github.Noiseneks.taskManagementSpring.config;
+package com.github.Noiseneks.taskManagementSpring.core.config;
 
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfiguration {
 
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI OpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("Task Management Application")
                         .description("Test backend application for task management")
