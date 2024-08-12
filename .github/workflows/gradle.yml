@@ -46,6 +46,15 @@ jobs:
           MYSQL_DATABASE: testdb
           DB_USERNAME: root
           DB_PASSWORD: testrootpass
+
+      - name: Store reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            **/build/reports/
+            **/build/test-results/          
           
       - name: Publish Test Reports
         uses: dorny/test-reporter@v1
