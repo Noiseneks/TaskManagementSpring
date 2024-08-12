@@ -28,10 +28,6 @@ public class RequestUnitTest {
 
         String jsonExample = "{\"status\":\"UP\"}";
 
-        if (true) {
-            throw new RuntimeException(String.valueOf(content()));
-        }
-
         mvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andExpect(content().json(jsonExample));
