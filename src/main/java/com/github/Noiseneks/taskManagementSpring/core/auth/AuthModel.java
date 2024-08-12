@@ -4,10 +4,12 @@ import com.github.Noiseneks.taskManagementSpring.core.repository.UserRepository;
 import com.github.Noiseneks.taskManagementSpring.domain.dtos.LoginUserDto;
 import com.github.Noiseneks.taskManagementSpring.domain.dtos.RegisterUserDto;
 import com.github.Noiseneks.taskManagementSpring.domain.entity.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthModel {
@@ -29,6 +31,11 @@ public class AuthModel {
 
     public User signup(RegisterUserDto input) {
         User user = new User();
+
+        if (userRepository.getByUsername(input.getEmail()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with given email already exists");
+        }
+
         user.setUsername(input.getEmail());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
 
@@ -36,6 +43,11 @@ public class AuthModel {
     }
 
     public User authenticate(LoginUserDto input) {
+
+        if (userRepository.getByUsername(input.getEmail()) == null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with given email doesn't exists");
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getEmail(),

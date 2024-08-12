@@ -40,10 +40,11 @@ public class TasksModel {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.getByUsername(authentication.getName());
 
-        Task task = new Task()
-                .setAuthorId(user.getId())
-                .setName(taskDto.getName())
-                .setDescription(taskDto.getDescription());
+        if (StringUtils.isEmpty(taskDto.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Task name can't be empty");
+        }
+
+        Task task = new Task().setAuthorId(user.getId()).setName(taskDto.getName()).setDescription(taskDto.getDescription());
 
         if (StringUtils.isNotEmpty(taskDto.getPriority())) {
             task.setPriority(castPriority(taskDto.getPriority()));
@@ -70,6 +71,10 @@ public class TasksModel {
         if (!checkIfTaskExists(id)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Task with given id doesn't exist");
         }
+
+        //Deleting all comments to deleted task
+        commentRepository.getCommentsByTaskId(id)
+                .forEach(x -> commentRepository.deleteCommentById(x.getId()));
 
         taskRepository.deleteTaskById(id);
     }
@@ -143,9 +148,7 @@ public class TasksModel {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.getByUsername(authentication.getName());
 
-        Comment comment = new Comment()
-                .setAuthorId(user.getId())
-                .setText(commentDto.getText());
+        Comment comment = new Comment().setAuthorId(user.getId()).setText(commentDto.getText());
 
         if (StringUtils.isEmpty(commentDto.getText())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Text of a comment can't be empty");
