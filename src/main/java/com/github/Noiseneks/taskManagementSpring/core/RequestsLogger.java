@@ -21,7 +21,7 @@ public class RequestsLogger extends OncePerRequestFilter {
             @NotNull HttpServletRequest request,
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain) throws ServletException, IOException {
-        LOGGER.info("Respond to request {} {}, maybe status {}", request.getMethod(), request.getRequestURI(), response.getStatus());
+        LOGGER.info("Respond to request {} {}", request.getMethod(), request.getRequestURI());
         filterChain.doFilter(request, response);
     }
 }
