@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.Noiseneks.taskManagementSpring.domain.LoginResponse;
 import com.github.Noiseneks.taskManagementSpring.domain.dtos.LoginUserDto;
 import com.github.Noiseneks.taskManagementSpring.domain.dtos.RegisterUserDto;
-import com.github.Noiseneks.taskManagementSpring.domain.entity.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -74,8 +73,11 @@ public class AuthTests {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        User user = objectMapper.readValue(response.getContentAsString(), User.class);
-        assertNotNull(user);
+        LoginResponse loginResponse = objectMapper.readValue(response.getContentAsString(), LoginResponse.class);
+        assertNotNull(loginResponse);
+
+        String jwtToken = loginResponse.getToken();
+        assertNotNull(jwtToken);
     }
     
     @Test
@@ -90,12 +92,12 @@ public class AuthTests {
                 .content(objectMapper.writeValueAsString(loginUserDto))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        MvcResult mvcResult2 = mvc.perform(requestBuilder2).andReturn();
-        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        MvcResult mvcResult = mvc.perform(requestBuilder2).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        LoginResponse loginResponse = objectMapper.readValue(response2.getContentAsString(), LoginResponse.class);
+        LoginResponse loginResponse = objectMapper.readValue(response.getContentAsString(), LoginResponse.class);
         assertNotNull(loginResponse);
 
         String jwtToken = loginResponse.getToken();

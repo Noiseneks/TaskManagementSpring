@@ -53,9 +53,16 @@ public class AuthResource {
             }
     )
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<LoginResponse> register(@RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authModel.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+
+        String jwtToken = jwtModel.generateToken(registeredUser);
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(jwtToken);
+        loginResponse.setExpiresIn(jwtModel.getExpirationTime());
+        loginResponse.setUserId(registeredUser.getId());
+
+        return ResponseEntity.ok(loginResponse);
     }
 
 
@@ -96,6 +103,7 @@ public class AuthResource {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(jwtToken);
         loginResponse.setExpiresIn(jwtModel.getExpirationTime());
+        loginResponse.setUserId(authenticatedUser.getId());
 
         return ResponseEntity.ok(loginResponse);
     }

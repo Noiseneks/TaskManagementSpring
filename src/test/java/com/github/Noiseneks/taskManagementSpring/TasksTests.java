@@ -3,10 +3,12 @@ package com.github.Noiseneks.taskManagementSpring;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.Noiseneks.taskManagementSpring.domain.LoginResponse;
-import com.github.Noiseneks.taskManagementSpring.domain.dtos.*;
+import com.github.Noiseneks.taskManagementSpring.domain.dtos.CommentDto;
+import com.github.Noiseneks.taskManagementSpring.domain.dtos.IdDto;
+import com.github.Noiseneks.taskManagementSpring.domain.dtos.RegisterUserDto;
+import com.github.Noiseneks.taskManagementSpring.domain.dtos.TaskDto;
 import com.github.Noiseneks.taskManagementSpring.domain.entity.Comment;
 import com.github.Noiseneks.taskManagementSpring.domain.entity.Task;
-import com.github.Noiseneks.taskManagementSpring.domain.entity.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -26,8 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -44,7 +45,7 @@ public class TasksTests {
 
     @Test
     @Order(1)
-    public void registerNewAccountAndLogin() throws Exception {
+    public void registerNewAccount() throws Exception {
         String username = getRandomString(5, 8);
         String userPassword = getRandomString(8, 16);
 
@@ -63,31 +64,17 @@ public class TasksTests {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        user = objectMapper.readValue(response.getContentAsString(), User.class);
-        assertNotNull(user);
-
-        LoginUserDto loginUserDto = new LoginUserDto();
-        loginUserDto.setEmail(username);
-        loginUserDto.setPassword(userPassword);
-
-        RequestBuilder requestBuilder2 = MockMvcRequestBuilders
-                .post("/auth/login")
-                .content(objectMapper.writeValueAsString(loginUserDto))
-                .contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult mvcResult2 = mvc.perform(requestBuilder2).andReturn();
-        MockHttpServletResponse response2 = mvcResult2.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response2.getStatus());
-
-        LoginResponse loginResponse = objectMapper.readValue(response2.getContentAsString(), LoginResponse.class);
+        LoginResponse loginResponse = objectMapper.readValue(response.getContentAsString(), LoginResponse.class);
         assertNotNull(loginResponse);
+
+        userId = loginResponse.getUserId();
+        assertNotEquals(0, userId);
 
         jwtToken = loginResponse.getToken();
         assertNotNull(jwtToken);
     }
 
-    private static volatile User user;
+    private static volatile long userId;
 
     @Test
     @Order(2)
@@ -194,7 +181,7 @@ public class TasksTests {
     @Order(6)
     public void getListAuthoredByIdTest() throws Exception {
         IdDto idDto = new IdDto();
-        idDto.setId(user.getId());
+        idDto.setId(userId);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/tasks/getByAuthorId")
