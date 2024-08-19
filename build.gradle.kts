@@ -23,7 +23,7 @@ dependencies {
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
 
-    implementation("org.mariadb.jdbc:mariadb-java-client:2.5.2")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.4.1")
 
     // openapi
     implementation(group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version = "2.6.0")
