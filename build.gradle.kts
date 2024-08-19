@@ -21,7 +21,7 @@ dependencies {
     // JWT
     implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
-    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
+    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.12.6")
 
     implementation("org.mariadb.jdbc:mariadb-java-client:2.5.2")
 
