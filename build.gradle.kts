@@ -29,7 +29,7 @@ dependencies {
     implementation(group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version = "2.6.0")
     implementation("org.jetbrains:annotations:24.0.0")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.3"))
+    testImplementation(platform("org.junit:junit-bom:5.11.1"))
     testImplementation(group = "org.junit.jupiter", name = "junit-jupiter")
 }
 
